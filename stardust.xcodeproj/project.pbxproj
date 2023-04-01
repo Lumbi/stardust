@@ -1,0 +1,531 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0D5749F629D7B8CC005F1554 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749F529D7B8CC005F1554 /* AppDelegate.m */; };
+		0D5749F929D7B8CC005F1554 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749F829D7B8CC005F1554 /* GameViewController.m */; };
+		0D5749FC29D7B8CC005F1554 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D5749FA29D7B8CC005F1554 /* Main.storyboard */; };
+		0D5749FF29D7B8CC005F1554 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D5749FD29D7B8CC005F1554 /* LaunchScreen.storyboard */; };
+		0D574A0129D7B8CC005F1554 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D574A0029D7B8CC005F1554 /* main.m */; };
+		0D574A0A29D7B8CC005F1554 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D574A0929D7B8CC005F1554 /* AppDelegate.m */; };
+		0D574A0D29D7B8CC005F1554 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D574A0C29D7B8CC005F1554 /* GameViewController.m */; };
+		0D574A1029D7B8CD005F1554 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D574A0E29D7B8CD005F1554 /* Main.storyboard */; };
+		0D574A1229D7B8CD005F1554 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D574A1129D7B8CD005F1554 /* main.m */; };
+		0D574A1429D7B8CD005F1554 /* Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749E929D7B8CB005F1554 /* Renderer.m */; };
+		0D574A1529D7B8CD005F1554 /* Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749E929D7B8CB005F1554 /* Renderer.m */; };
+		0D574A1629D7B8CD005F1554 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749EB29D7B8CB005F1554 /* Shaders.metal */; };
+		0D574A1729D7B8CD005F1554 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749EB29D7B8CB005F1554 /* Shaders.metal */; };
+		0D574A1829D7B8CD005F1554 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D5749EC29D7B8CC005F1554 /* Assets.xcassets */; };
+		0D574A1929D7B8CD005F1554 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D5749EC29D7B8CC005F1554 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0D5749E829D7B8CB005F1554 /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		0D5749E929D7B8CB005F1554 /* Renderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Renderer.m; sourceTree = "<group>"; };
+		0D5749EA29D7B8CB005F1554 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		0D5749EB29D7B8CB005F1554 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		0D5749EC29D7B8CC005F1554 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0D5749F129D7B8CC005F1554 /* stardust.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stardust.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D5749F429D7B8CC005F1554 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0D5749F529D7B8CC005F1554 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0D5749F729D7B8CC005F1554 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		0D5749F829D7B8CC005F1554 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		0D5749FB29D7B8CC005F1554 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0D5749FE29D7B8CC005F1554 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0D574A0029D7B8CC005F1554 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0D574A0629D7B8CC005F1554 /* stardust.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stardust.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D574A0829D7B8CC005F1554 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0D574A0929D7B8CC005F1554 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0D574A0B29D7B8CC005F1554 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		0D574A0C29D7B8CC005F1554 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		0D574A0F29D7B8CD005F1554 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0D574A1129D7B8CD005F1554 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0D574A1329D7B8CD005F1554 /* stardust_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = stardust_macOS.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0D5749EE29D7B8CC005F1554 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D574A0329D7B8CC005F1554 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0D5749E229D7B8CB005F1554 = {
+			isa = PBXGroup;
+			children = (
+				0D5749E729D7B8CB005F1554 /* stardust Shared */,
+				0D5749F329D7B8CC005F1554 /* stardust iOS */,
+				0D574A0729D7B8CC005F1554 /* stardust macOS */,
+				0D5749F229D7B8CC005F1554 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0D5749E729D7B8CB005F1554 /* stardust Shared */ = {
+			isa = PBXGroup;
+			children = (
+				0D5749E829D7B8CB005F1554 /* Renderer.h */,
+				0D5749E929D7B8CB005F1554 /* Renderer.m */,
+				0D5749EA29D7B8CB005F1554 /* ShaderTypes.h */,
+				0D5749EB29D7B8CB005F1554 /* Shaders.metal */,
+				0D5749EC29D7B8CC005F1554 /* Assets.xcassets */,
+			);
+			path = "stardust Shared";
+			sourceTree = "<group>";
+		};
+		0D5749F229D7B8CC005F1554 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D5749F129D7B8CC005F1554 /* stardust.app */,
+				0D574A0629D7B8CC005F1554 /* stardust.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0D5749F329D7B8CC005F1554 /* stardust iOS */ = {
+			isa = PBXGroup;
+			children = (
+				0D5749F429D7B8CC005F1554 /* AppDelegate.h */,
+				0D5749F529D7B8CC005F1554 /* AppDelegate.m */,
+				0D5749F729D7B8CC005F1554 /* GameViewController.h */,
+				0D5749F829D7B8CC005F1554 /* GameViewController.m */,
+				0D5749FA29D7B8CC005F1554 /* Main.storyboard */,
+				0D5749FD29D7B8CC005F1554 /* LaunchScreen.storyboard */,
+				0D574A0029D7B8CC005F1554 /* main.m */,
+			);
+			path = "stardust iOS";
+			sourceTree = "<group>";
+		};
+		0D574A0729D7B8CC005F1554 /* stardust macOS */ = {
+			isa = PBXGroup;
+			children = (
+				0D574A0829D7B8CC005F1554 /* AppDelegate.h */,
+				0D574A0929D7B8CC005F1554 /* AppDelegate.m */,
+				0D574A0B29D7B8CC005F1554 /* GameViewController.h */,
+				0D574A0C29D7B8CC005F1554 /* GameViewController.m */,
+				0D574A0E29D7B8CD005F1554 /* Main.storyboard */,
+				0D574A1129D7B8CD005F1554 /* main.m */,
+				0D574A1329D7B8CD005F1554 /* stardust_macOS.entitlements */,
+			);
+			path = "stardust macOS";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0D5749F029D7B8CC005F1554 /* stardust iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D574A1C29D7B8CD005F1554 /* Build configuration list for PBXNativeTarget "stardust iOS" */;
+			buildPhases = (
+				0D5749ED29D7B8CC005F1554 /* Sources */,
+				0D5749EE29D7B8CC005F1554 /* Frameworks */,
+				0D5749EF29D7B8CC005F1554 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "stardust iOS";
+			productName = "stardust iOS";
+			productReference = 0D5749F129D7B8CC005F1554 /* stardust.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0D574A0529D7B8CC005F1554 /* stardust macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D574A1F29D7B8CD005F1554 /* Build configuration list for PBXNativeTarget "stardust macOS" */;
+			buildPhases = (
+				0D574A0229D7B8CC005F1554 /* Sources */,
+				0D574A0329D7B8CC005F1554 /* Frameworks */,
+				0D574A0429D7B8CC005F1554 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "stardust macOS";
+			productName = "stardust macOS";
+			productReference = 0D574A0629D7B8CC005F1554 /* stardust.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0D5749E329D7B8CB005F1554 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1410;
+				TargetAttributes = {
+					0D5749F029D7B8CC005F1554 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+					0D574A0529D7B8CC005F1554 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+				};
+			};
+			buildConfigurationList = 0D5749E629D7B8CB005F1554 /* Build configuration list for PBXProject "stardust" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0D5749E229D7B8CB005F1554;
+			productRefGroup = 0D5749F229D7B8CC005F1554 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0D5749F029D7B8CC005F1554 /* stardust iOS */,
+				0D574A0529D7B8CC005F1554 /* stardust macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0D5749EF29D7B8CC005F1554 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D5749FC29D7B8CC005F1554 /* Main.storyboard in Resources */,
+				0D574A1829D7B8CD005F1554 /* Assets.xcassets in Resources */,
+				0D5749FF29D7B8CC005F1554 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D574A0429D7B8CC005F1554 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D574A1929D7B8CD005F1554 /* Assets.xcassets in Resources */,
+				0D574A1029D7B8CD005F1554 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0D5749ED29D7B8CC005F1554 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D574A1429D7B8CD005F1554 /* Renderer.m in Sources */,
+				0D5749F929D7B8CC005F1554 /* GameViewController.m in Sources */,
+				0D574A0129D7B8CC005F1554 /* main.m in Sources */,
+				0D5749F629D7B8CC005F1554 /* AppDelegate.m in Sources */,
+				0D574A1629D7B8CD005F1554 /* Shaders.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D574A0229D7B8CC005F1554 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D574A1529D7B8CD005F1554 /* Renderer.m in Sources */,
+				0D574A0D29D7B8CC005F1554 /* GameViewController.m in Sources */,
+				0D574A1229D7B8CD005F1554 /* main.m in Sources */,
+				0D574A0A29D7B8CC005F1554 /* AppDelegate.m in Sources */,
+				0D574A1729D7B8CD005F1554 /* Shaders.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0D5749FA29D7B8CC005F1554 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0D5749FB29D7B8CC005F1554 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		0D5749FD29D7B8CC005F1554 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0D5749FE29D7B8CC005F1554 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		0D574A0E29D7B8CD005F1554 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0D574A0F29D7B8CD005F1554 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0D574A1A29D7B8CD005F1554 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		0D574A1B29D7B8CD005F1554 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+			};
+			name = Release;
+		};
+		0D574A1D29D7B8CD005F1554 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VQ5V23TK4V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gabriellumbi.stardust;
+				PRODUCT_NAME = stardust;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0D574A1E29D7B8CD005F1554 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VQ5V23TK4V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gabriellumbi.stardust;
+				PRODUCT_NAME = stardust;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0D574A2029D7B8CD005F1554 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "stardust macOS/stardust_macOS.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VQ5V23TK4V;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gabriellumbi.stardust;
+				PRODUCT_NAME = stardust;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		0D574A2129D7B8CD005F1554 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "stardust macOS/stardust_macOS.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VQ5V23TK4V;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gabriellumbi.stardust;
+				PRODUCT_NAME = stardust;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0D5749E629D7B8CB005F1554 /* Build configuration list for PBXProject "stardust" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D574A1A29D7B8CD005F1554 /* Debug */,
+				0D574A1B29D7B8CD005F1554 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D574A1C29D7B8CD005F1554 /* Build configuration list for PBXNativeTarget "stardust iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D574A1D29D7B8CD005F1554 /* Debug */,
+				0D574A1E29D7B8CD005F1554 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D574A1F29D7B8CD005F1554 /* Build configuration list for PBXNativeTarget "stardust macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D574A2029D7B8CD005F1554 /* Debug */,
+				0D574A2129D7B8CD005F1554 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0D5749E329D7B8CB005F1554 /* Project object */;
+}
