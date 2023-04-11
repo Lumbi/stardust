@@ -21,29 +21,39 @@ typedef NSInteger EnumBackingType;
 
 #include <simd/simd.h>
 
+#define INSTANCE_COUNT 10000
+
 typedef NS_ENUM(EnumBackingType, BufferIndex)
 {
     BufferIndexMeshPositions = 0,
     BufferIndexMeshGenerics  = 1,
-    BufferIndexUniforms      = 2
+    BufferIndexSharedUniforms = 2,
+    BufferIndexInstanceUniforms = 3
 };
 
 typedef NS_ENUM(EnumBackingType, VertexAttribute)
 {
-    VertexAttributePosition  = 0,
-    VertexAttributeTexcoord  = 1,
+    VertexAttributePosition = 0,
+    VertexAttributeTexcoord = 1,
 };
 
 typedef NS_ENUM(EnumBackingType, TextureIndex)
 {
-    TextureIndexColor    = 0,
+    TextureIndexColor = 0,
 };
 
 typedef struct
+{;
+    vector_float3 position;
+    vector_float3 velocity;
+} InstanceUniforms;
+
+
+typedef struct
 {
-    matrix_float4x4 projectionMatrix;
-    matrix_float4x4 modelViewMatrix;
-} Uniforms;
+    matrix_float4x4 viewProjectionMatrix;
+    float deltaTime;
+} SharedUniforms;
 
 #endif /* ShaderTypes_h */
 
