@@ -61,7 +61,7 @@ struct Physics {
     return self;
 }
 
-- (void)_loadMetalWithView:(nonnull MTKView *) view;
+-(void)_loadMetalWithView:(nonnull MTKView *) view;
 {
     // Load Metal state objects and initialize renderer dependent view properties
 
@@ -130,14 +130,11 @@ struct Physics {
     _commandQueue = [_device newCommandQueue];
 }
 
-- (void)_loadAssets
+-(void)_loadAssets
 {
-    /// Load assets into metal objects
-
     NSError *error;
-
     MTKMeshBufferAllocator *metalAllocator = [[MTKMeshBufferAllocator alloc]
-                                              initWithDevice: _device];
+                                              initWithDevice:_device];
 
     MDLMesh *mdlMesh = [MDLMesh newIcosahedronWithRadius:1.0f
                                            inwardNormals:false
@@ -150,16 +147,15 @@ struct Physics {
 
     mdlMesh.vertexDescriptor = mdlVertexDescriptor;
 
-    _mesh = [[MTKMesh alloc] initWithMesh: mdlMesh
-                                   device: _device
-                                    error: &error];
+    _mesh = [[MTKMesh alloc] initWithMesh:mdlMesh
+                                   device:_device
+                                    error:&error];
 
-    if(!_mesh || error)
-    {
+    if(!_mesh || error) {
         NSLog(@"Error creating MetalKit mesh %@", error.localizedDescription);
     }
 
-    MTKTextureLoader* textureLoader = [[MTKTextureLoader alloc] initWithDevice: _device];
+    MTKTextureLoader* textureLoader = [[MTKTextureLoader alloc] initWithDevice:_device];
 
     NSDictionary *textureLoaderOptions =
     @{
@@ -167,19 +163,18 @@ struct Physics {
         MTKTextureLoaderOptionTextureStorageMode : @(MTLStorageModePrivate)
     };
 
-    _particleTexture = [textureLoader newTextureWithName: @"ParticleTexture"
-                                      scaleFactor: 1.0
-                                           bundle: nil
-                                          options: textureLoaderOptions
-                                            error: &error];
+    _particleTexture = [textureLoader newTextureWithName:@"ParticleTexture"
+                                      scaleFactor:1.0
+                                           bundle:nil
+                                          options:textureLoaderOptions
+                                            error:&error];
 
-    if(!_particleTexture || error)
-    {
+    if(!_particleTexture || error) {
         NSLog(@"Error creating texture %@", error.localizedDescription);
     }
 }
 
-- (void)_initPhysics
+-(void)_initPhysics
 {
     for (unsigned int i = 0; i < INSTANCE_COUNT; i++)
     {
@@ -204,10 +199,8 @@ struct Physics {
     _camera_position = (vector_float3) { 0.f, 0.f, -100.f };
 }
 
-- (void)drawInMTKView:(nonnull MTKView *)view
+-(void)drawInMTKView:(nonnull MTKView *)view
 {
-    /// Per frame updates here
-
     dispatch_semaphore_wait(_inFlightSemaphore, DISPATCH_TIME_FOREVER);
 
     [self _updateCamera];
@@ -223,8 +216,8 @@ struct Physics {
     sharedUniforms->deltaTime = 1.f / 60.f; // TODO: set properly
 
     [computeEncoder setComputePipelineState:_physicsPipelineState];
-    [computeEncoder setBuffer:_instanceUniformBuffer offset:0 atIndex: BufferIndexInstanceUniforms];
-    [computeEncoder setBuffer:_sharedUniformBuffer offset:0 atIndex: BufferIndexSharedUniforms];
+    [computeEncoder setBuffer:_instanceUniformBuffer offset:0 atIndex:BufferIndexInstanceUniforms];
+    [computeEncoder setBuffer:_sharedUniformBuffer offset:0 atIndex:BufferIndexSharedUniforms];
 
     NSUInteger threadGroupSize = _physicsPipelineState.maxTotalThreadsPerThreadgroup;
     if (threadGroupSize > INSTANCE_COUNT) threadGroupSize = INSTANCE_COUNT;
@@ -252,16 +245,15 @@ struct Physics {
 
     commandBuffer = [_commandQueue commandBuffer];
 
-    id <MTLRenderCommandEncoder> renderEncoder =
-    [commandBuffer renderCommandEncoderWithDescriptor: renderPassDescriptor];
+    id <MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
     renderEncoder.label = @"Render Command Encoder";
 
-    [renderEncoder setFrontFacingWinding: MTLWindingCounterClockwise];
-    [renderEncoder setCullMode: MTLCullModeBack];
-    [renderEncoder setRenderPipelineState: _pipelineState];
-    [renderEncoder setDepthStencilState: _depthState];
+    [renderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
+    [renderEncoder setCullMode:MTLCullModeBack];
+    [renderEncoder setRenderPipelineState:_pipelineState];
+    [renderEncoder setDepthStencilState:_depthState];
 
-    [renderEncoder pushDebugGroup: @"Draw Instance"];
+    [renderEncoder pushDebugGroup:@"Draw Instance"];
 
     [renderEncoder setVertexBuffer:_sharedUniformBuffer
                             offset:0
@@ -308,7 +300,7 @@ struct Physics {
     [commandBuffer commit];
 }
 
-- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
+-(void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
 {
     _aspect = size.width / (float)size.height;
     [self _updateCamera];
@@ -354,7 +346,7 @@ struct Physics {
 
 // MARK: - Matrix utilities
 
-vector_float3 transform(matrix_float4x4 matrix, vector_float3 vector) {
+static vector_float3 transform(matrix_float4x4 matrix, vector_float3 vector) {
     vector_float3 col1 = *(vector_float3 *)&matrix.columns[0];
     vector_float3 col2 = *(vector_float3 *)&matrix.columns[1];
     vector_float3 col3 = *(vector_float3 *)&matrix.columns[2];
@@ -366,7 +358,7 @@ vector_float3 transform(matrix_float4x4 matrix, vector_float3 vector) {
     return (vector_float3) { x, y, z };
 }
 
-matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz)
+static matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz)
 {
     return (matrix_float4x4) {{
         { 1,   0,  0,  0 },
@@ -392,7 +384,7 @@ static matrix_float4x4 matrix4x4_rotation(float radians, vector_float3 axis)
     }};
 }
 
-matrix_float4x4 matrix_perspective_right_hand(float fovyRadians, float aspect, float nearZ, float farZ)
+static matrix_float4x4 matrix_perspective_right_hand(float fovyRadians, float aspect, float nearZ, float farZ)
 {
     float ys = 1 / tanf(fovyRadians * 0.5);
     float xs = ys / aspect;

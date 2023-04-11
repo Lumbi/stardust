@@ -94,6 +94,6 @@ float4 fragmentShader(
     constexpr sampler colorSampler(mip_filter::linear,
                                    mag_filter::linear,
                                    min_filter::linear);
-    half4 colorSample   = colorMap.sample(colorSampler, in.texCoord.xy);
+    half4 colorSample = colorMap.sample(colorSampler, in.texCoord.xy);
     return float4(colorSample);
 }
