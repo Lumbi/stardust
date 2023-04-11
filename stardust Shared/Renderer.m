@@ -139,14 +139,11 @@ struct Physics {
     MTKMeshBufferAllocator *metalAllocator = [[MTKMeshBufferAllocator alloc]
                                               initWithDevice: _device];
 
-    MDLMesh *mdlMesh = [MDLMesh newBoxWithDimensions: vector3(1.0f, 1.0f, 1.0f)
-                                            segments: vector3(1u, 1u, 1u)
-                                        geometryType: MDLGeometryTypeTriangles
-                                       inwardNormals: NO
-                                           allocator: metalAllocator];
+    MDLMesh *mdlMesh = [MDLMesh newIcosahedronWithRadius:1.0f
+                                           inwardNormals:false
+                                               allocator:metalAllocator];
 
-    MDLVertexDescriptor *mdlVertexDescriptor =
-    MTKModelIOVertexDescriptorFromMetal(_mtlVertexDescriptor);
+    MDLVertexDescriptor *mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(_mtlVertexDescriptor);
 
     mdlVertexDescriptor.attributes[VertexAttributePosition].name = MDLVertexAttributePosition;
     mdlVertexDescriptor.attributes[VertexAttributeTexcoord].name = MDLVertexAttributeTextureCoordinate;
