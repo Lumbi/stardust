@@ -183,9 +183,10 @@ struct Physics {
     for (unsigned int i = 0; i < INSTANCE_COUNT; i++)
     {
         InstanceUniforms *instance = [self _instanceUniform:i];
-        float x = rand() % 100 - 50.f;
-        float y = rand() % 100 - 50.f;
-        float z = rand() % 100 - 50.f;
+        int size = 500;
+        float x = rand() % size - size / 2;
+        float y = rand() % size - size / 2;
+        float z = rand() % size - size / 2;
         instance->position = vector3(x * sinf(i), y * cosf(i), z * sinf(i));
         instance->velocity = vector3(0.f, 0.f, 0.f);
     }
