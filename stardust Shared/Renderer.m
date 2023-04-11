@@ -42,7 +42,8 @@ struct Physics {
     float _camera_yaw;
     vector_float3 _camera_position;
 
-    float _frameDuration;
+    CFAbsoluteTime _frameDuration;
+    CFAbsoluteTime _previousTime;
 }
 
 -(nonnull instancetype)initWithMetalKitView:(nonnull MTKView *) view;
@@ -128,6 +129,9 @@ struct Physics {
     _instanceUniformBuffer.label = @"Instance Uniform Buffer";
 
     _commandQueue = [_device newCommandQueue];
+
+    _frameDuration = 0.f;
+    _previousTime = CFAbsoluteTimeGetCurrent();
 }
 
 -(void)_loadAssets
@@ -202,6 +206,9 @@ struct Physics {
 -(void)drawInMTKView:(nonnull MTKView *)view
 {
     dispatch_semaphore_wait(_inFlightSemaphore, DISPATCH_TIME_FOREVER);
+
+    _frameDuration = CFAbsoluteTimeGetCurrent() - _previousTime;
+    _previousTime = CFAbsoluteTimeGetCurrent();
 
     [self _updateCamera];
 
@@ -342,6 +349,15 @@ struct Physics {
     matrix_float4x4 projection_matrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), _aspect, 0.1f, 1000.0f);
 
     _viewProjectionMatrix = matrix_multiply(projection_matrix, view_matrix);
+}
+
+-(float)fps
+{
+    if (_frameDuration > 0) {
+        return 1.f / _frameDuration;
+    } else {
+        return 0.f;
+    }
 }
 
 // MARK: - Matrix utilities

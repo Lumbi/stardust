@@ -11,6 +11,8 @@
 
 -(nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)view;
 
+-(float)fps;
+
 // MARK: - Camera control
 
 -(void)truckCamera:(float)delta;

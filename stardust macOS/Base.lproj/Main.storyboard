@@ -709,7 +709,25 @@
                     <view key="view" id="m2S-Jp-Qdl" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SlT-5G-Cjj">
+                                <rect key="frame" x="18" y="564" width="36" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="FPS: " id="78I-KP-qTl">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="SlT-5G-Cjj" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="Uk4-CH-ljx"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SlT-5G-Cjj" secondAttribute="trailing" id="XOK-t2-lws"/>
+                            <constraint firstItem="SlT-5G-Cjj" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="wbY-VU-dbi"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="fpsLabel" destination="SlT-5G-Cjj" id="PdH-sD-Xdb"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

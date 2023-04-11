@@ -122,6 +122,8 @@ typedef NS_ENUM(NSUInteger, PressedKeys) {
     if (_pressedKeys & PRESSED_KEY_S) {
         [_renderer dollyCamera: -1.f];
     }
+
+    self.fpsLabel.cell.title = [NSString stringWithFormat:@"FPS: %.2f", [_renderer fps]];
 }
 
 - (void)_handleKeyDown:(NSEvent *)event

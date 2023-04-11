@@ -12,4 +12,6 @@
 
 @interface GameViewController : NSViewController
 
+@property (nonatomic, weak) IBOutlet NSTextField *fpsLabel;
+
 @end
