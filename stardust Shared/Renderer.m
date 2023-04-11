@@ -9,11 +9,14 @@
 #import <ModelIO/ModelIO.h>
 
 #import "Renderer.h"
-
-// Include header shared between C code here, which executes Metal API commands, and .metal files
 #import "ShaderTypes.h"
 
-static const NSUInteger MaxBuffersInFlight = 3;
+#include <time.h>
+
+struct Physics {
+    vector_float3 _position;
+    vector_float3 _velocity;
+};
 
 @implementation Renderer
 {
@@ -21,38 +24,46 @@ static const NSUInteger MaxBuffersInFlight = 3;
     id <MTLDevice> _device;
     id <MTLCommandQueue> _commandQueue;
 
-    id <MTLBuffer> _dynamicUniformBuffer[MaxBuffersInFlight];
+    id <MTLBuffer> _instanceUniformBuffer;
+    id <MTLBuffer> _sharedUniformBuffer;
+    id <MTLComputePipelineState> _physicsPipelineState;
     id <MTLRenderPipelineState> _pipelineState;
     id <MTLDepthStencilState> _depthState;
     id <MTLTexture> _colorMap;
     MTLVertexDescriptor *_mtlVertexDescriptor;
 
-    uint8_t _uniformBufferIndex;
-
-    matrix_float4x4 _projectionMatrix;
-
-    float _rotation;
-
     MTKMesh *_mesh;
+
+    matrix_float4x4 _viewProjectionMatrix;
+
+    float _aspect;
+
+    float _camera_pitch;
+    float _camera_yaw;
+    vector_float3 _camera_position;
+
+    float _frameDuration;
 }
 
--(nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)view;
+-(nonnull instancetype)initWithMetalKitView:(nonnull MTKView *) view;
 {
     self = [super init];
     if(self)
     {
         _device = view.device;
-        _inFlightSemaphore = dispatch_semaphore_create(MaxBuffersInFlight);
+        _inFlightSemaphore = dispatch_semaphore_create(1);
         [self _loadMetalWithView:view];
         [self _loadAssets];
+        [self _initPhysics];
+        [self _initCamera];
     }
 
     return self;
 }
 
-- (void)_loadMetalWithView:(nonnull MTKView *)view;
+- (void)_loadMetalWithView:(nonnull MTKView *) view;
 {
-    /// Load Metal state objects and initialize renderer dependent view properties
+    // Load Metal state objects and initialize renderer dependent view properties
 
     view.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
     view.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
@@ -77,13 +88,18 @@ static const NSUInteger MaxBuffersInFlight = 3;
     _mtlVertexDescriptor.layouts[BufferIndexMeshGenerics].stepFunction = MTLVertexStepFunctionPerVertex;
 
     id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
+    NSError *error = NULL;
 
-    id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+    id<MTLFunction> physicsFunction = [defaultLibrary newFunctionWithName:@"simulate_physics"];
+    _physicsPipelineState = [_device newComputePipelineStateWithFunction:physicsFunction
+                                                                   error:&error];
+    if (!_physicsPipelineState) {
+        NSLog(@"Failed to create physics pipeline state, error %@", error);
+    }
 
-    id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
-
-    MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
-    pipelineStateDescriptor.label = @"MyPipeline";
+    MTLRenderPipelineDescriptor *pipelineStateDescriptor = [MTLRenderPipelineDescriptor new];
+    id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+    id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
     pipelineStateDescriptor.rasterSampleCount = view.sampleCount;
     pipelineStateDescriptor.vertexFunction = vertexFunction;
     pipelineStateDescriptor.fragmentFunction = fragmentFunction;
@@ -91,26 +107,25 @@ static const NSUInteger MaxBuffersInFlight = 3;
     pipelineStateDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat;
     pipelineStateDescriptor.depthAttachmentPixelFormat = view.depthStencilPixelFormat;
     pipelineStateDescriptor.stencilAttachmentPixelFormat = view.depthStencilPixelFormat;
-
-    NSError *error = NULL;
-    _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
-    if (!_pipelineState)
-    {
+    _pipelineState = [_device newRenderPipelineStateWithDescriptor: pipelineStateDescriptor error: &error];
+    if (!_pipelineState) {
         NSLog(@"Failed to created pipeline state, error %@", error);
     }
 
     MTLDepthStencilDescriptor *depthStateDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStateDesc.depthCompareFunction = MTLCompareFunctionLess;
-    depthStateDesc.depthWriteEnabled = YES;
+    depthStateDesc.depthWriteEnabled = true;
+
     _depthState = [_device newDepthStencilStateWithDescriptor:depthStateDesc];
 
-    for(NSUInteger i = 0; i < MaxBuffersInFlight; i++)
-    {
-        _dynamicUniformBuffer[i] = [_device newBufferWithLength:sizeof(Uniforms)
-                                                        options:MTLResourceStorageModeShared];
+    // Uniforms
 
-        _dynamicUniformBuffer[i].label = @"UniformBuffer";
-    }
+    _sharedUniformBuffer = [_device newBufferWithLength:sizeof(SharedUniforms)
+                                                options:MTLResourceStorageModeShared];
+
+    _instanceUniformBuffer = [_device newBufferWithLength:sizeof(InstanceUniforms) * INSTANCE_COUNT
+                                                  options:MTLResourceStorageModeShared];
+    _instanceUniformBuffer.label = @"Instance Uniform Buffer";
 
     _commandQueue = [_device newCommandQueue];
 }
@@ -124,42 +139,42 @@ static const NSUInteger MaxBuffersInFlight = 3;
     MTKMeshBufferAllocator *metalAllocator = [[MTKMeshBufferAllocator alloc]
                                               initWithDevice: _device];
 
-    MDLMesh *mdlMesh = [MDLMesh newBoxWithDimensions:(vector_float3){4, 4, 4}
-                                            segments:(vector_uint3){2, 2, 2}
-                                        geometryType:MDLGeometryTypeTriangles
-                                       inwardNormals:NO
-                                           allocator:metalAllocator];
+    MDLMesh *mdlMesh = [MDLMesh newBoxWithDimensions: vector3(1.0f, 1.0f, 1.0f)
+                                            segments: vector3(1u, 1u, 1u)
+                                        geometryType: MDLGeometryTypeTriangles
+                                       inwardNormals: NO
+                                           allocator: metalAllocator];
 
     MDLVertexDescriptor *mdlVertexDescriptor =
     MTKModelIOVertexDescriptorFromMetal(_mtlVertexDescriptor);
 
-    mdlVertexDescriptor.attributes[VertexAttributePosition].name  = MDLVertexAttributePosition;
-    mdlVertexDescriptor.attributes[VertexAttributeTexcoord].name  = MDLVertexAttributeTextureCoordinate;
+    mdlVertexDescriptor.attributes[VertexAttributePosition].name = MDLVertexAttributePosition;
+    mdlVertexDescriptor.attributes[VertexAttributeTexcoord].name = MDLVertexAttributeTextureCoordinate;
 
     mdlMesh.vertexDescriptor = mdlVertexDescriptor;
 
-    _mesh = [[MTKMesh alloc] initWithMesh:mdlMesh
-                                   device:_device
-                                    error:&error];
+    _mesh = [[MTKMesh alloc] initWithMesh: mdlMesh
+                                   device: _device
+                                    error: &error];
 
     if(!_mesh || error)
     {
         NSLog(@"Error creating MetalKit mesh %@", error.localizedDescription);
     }
 
-    MTKTextureLoader* textureLoader = [[MTKTextureLoader alloc] initWithDevice:_device];
+    MTKTextureLoader* textureLoader = [[MTKTextureLoader alloc] initWithDevice: _device];
 
     NSDictionary *textureLoaderOptions =
     @{
-      MTKTextureLoaderOptionTextureUsage       : @(MTLTextureUsageShaderRead),
-      MTKTextureLoaderOptionTextureStorageMode : @(MTLStorageModePrivate)
-      };
+        MTKTextureLoaderOptionTextureUsage : @(MTLTextureUsageShaderRead),
+        MTKTextureLoaderOptionTextureStorageMode : @(MTLStorageModePrivate)
+    };
 
-    _colorMap = [textureLoader newTextureWithName:@"ColorMap"
-                                      scaleFactor:1.0
-                                           bundle:nil
-                                          options:textureLoaderOptions
-                                            error:&error];
+    _colorMap = [textureLoader newTextureWithName: @"ColorMap"
+                                      scaleFactor: 1.0
+                                           bundle: nil
+                                          options: textureLoaderOptions
+                                            error: &error];
 
     if(!_colorMap || error)
     {
@@ -167,21 +182,29 @@ static const NSUInteger MaxBuffersInFlight = 3;
     }
 }
 
-- (void)_updateGameState
+- (void)_initPhysics
 {
-    /// Update any game state before encoding renderint commands to our drawable
+    for (unsigned int i = 0; i < INSTANCE_COUNT; i++)
+    {
+        InstanceUniforms *instance = [self _instanceUniform:i];
+        float x = rand() % 100 - 50.f;
+        float y = rand() % 100 - 50.f;
+        float z = rand() % 100 - 50.f;
+        instance->position = vector3(x * sinf(i), y * cosf(i), z * sinf(i));
+        instance->velocity = vector3(0.f, 0.f, 0.f);
+    }
+}
 
-    Uniforms * uniforms = (Uniforms*)_dynamicUniformBuffer[_uniformBufferIndex].contents;
+-(InstanceUniforms *)_instanceUniform:(unsigned int)i
+{
+    return (InstanceUniforms *)(_instanceUniformBuffer.contents + sizeof(InstanceUniforms) * i);
+}
 
-    uniforms->projectionMatrix = _projectionMatrix;
-
-    vector_float3 rotationAxis = {1, 1, 0};
-    matrix_float4x4 modelMatrix = matrix4x4_rotation(_rotation, rotationAxis);
-    matrix_float4x4 viewMatrix = matrix4x4_translation(0.0, 0.0, -8.0);
-
-    uniforms->modelViewMatrix = matrix_multiply(viewMatrix, modelMatrix);
-
-    _rotation += .01;
+-(void)_initCamera
+{
+    _camera_yaw = 0.f;
+    _camera_pitch = -M_PI;
+    _camera_position = (vector_float3) { 0.f, 0.f, -100.f };
 }
 
 - (void)drawInMTKView:(nonnull MTKView *)view
@@ -190,88 +213,161 @@ static const NSUInteger MaxBuffersInFlight = 3;
 
     dispatch_semaphore_wait(_inFlightSemaphore, DISPATCH_TIME_FOREVER);
 
-    _uniformBufferIndex = (_uniformBufferIndex + 1) % MaxBuffersInFlight;
+    [self _updateCamera];
 
     id <MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    commandBuffer.label = @"MyCommand";
+    commandBuffer.label = @"Physics Command Encoder";
 
-    __block dispatch_semaphore_t block_sema = _inFlightSemaphore;
-    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer)
-     {
-         dispatch_semaphore_signal(block_sema);
-     }];
+    // Physics
 
-    [self _updateGameState];
+    id<MTLComputeCommandEncoder> computeEncoder = [commandBuffer computeCommandEncoder];
 
-    /// Delay getting the currentRenderPassDescriptor until absolutely needed. This avoids
-    ///   holding onto the drawable and blocking the display pipeline any longer than necessary
-    MTLRenderPassDescriptor* renderPassDescriptor = view.currentRenderPassDescriptor;
+    SharedUniforms *sharedUniforms = (SharedUniforms *)_sharedUniformBuffer.contents;
+    sharedUniforms->deltaTime = 1.f / 60.f; // TODO: set properly
 
-    if(renderPassDescriptor != nil)
+    [computeEncoder setComputePipelineState:_physicsPipelineState];
+    [computeEncoder setBuffer:_instanceUniformBuffer offset:0 atIndex: BufferIndexInstanceUniforms];
+    [computeEncoder setBuffer:_sharedUniformBuffer offset:0 atIndex: BufferIndexSharedUniforms];
+
+    NSUInteger threadGroupSize = _physicsPipelineState.maxTotalThreadsPerThreadgroup;
+    if (threadGroupSize > INSTANCE_COUNT) threadGroupSize = INSTANCE_COUNT;
+    [computeEncoder dispatchThreads: MTLSizeMake(INSTANCE_COUNT, 1, 1)
+              threadsPerThreadgroup: MTLSizeMake(threadGroupSize, 1, 1)];
+
+    [computeEncoder endEncoding];
+    [commandBuffer commit];
+    [commandBuffer waitUntilCompleted];
+
+    // Apply velociy
+    for (unsigned int i = 0; i < INSTANCE_COUNT; i++)
     {
-        /// Final pass rendering code here
-
-        id <MTLRenderCommandEncoder> renderEncoder =
-        [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-        renderEncoder.label = @"MyRenderEncoder";
-
-        [renderEncoder pushDebugGroup:@"DrawBox"];
-
-        [renderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
-        [renderEncoder setCullMode:MTLCullModeBack];
-        [renderEncoder setRenderPipelineState:_pipelineState];
-        [renderEncoder setDepthStencilState:_depthState];
-
-        [renderEncoder setVertexBuffer:_dynamicUniformBuffer[_uniformBufferIndex]
-                                offset:0
-                               atIndex:BufferIndexUniforms];
-
-        [renderEncoder setFragmentBuffer:_dynamicUniformBuffer[_uniformBufferIndex]
-                                  offset:0
-                                 atIndex:BufferIndexUniforms];
-
-        for (NSUInteger bufferIndex = 0; bufferIndex < _mesh.vertexBuffers.count; bufferIndex++)
-        {
-            MTKMeshBuffer *vertexBuffer = _mesh.vertexBuffers[bufferIndex];
-            if((NSNull*)vertexBuffer != [NSNull null])
-            {
-                [renderEncoder setVertexBuffer:vertexBuffer.buffer
-                                        offset:vertexBuffer.offset
-                                       atIndex:bufferIndex];
-            }
-        }
-
-        [renderEncoder setFragmentTexture:_colorMap
-                                  atIndex:TextureIndexColor];
-
-        for(MTKSubmesh *submesh in _mesh.submeshes)
-        {
-            [renderEncoder drawIndexedPrimitives:submesh.primitiveType
-                                      indexCount:submesh.indexCount
-                                       indexType:submesh.indexType
-                                     indexBuffer:submesh.indexBuffer.buffer
-                               indexBufferOffset:submesh.indexBuffer.offset];
-        }
-
-        [renderEncoder popDebugGroup];
-
-        [renderEncoder endEncoding];
-
-        [commandBuffer presentDrawable:view.currentDrawable];
+        InstanceUniforms * uniforms = [self _instanceUniform:i];
+        uniforms->position += uniforms->velocity * sharedUniforms->deltaTime;
     }
 
+    // Render
+
+    sharedUniforms->viewProjectionMatrix = _viewProjectionMatrix;
+
+    MTLRenderPassDescriptor* renderPassDescriptor = view.currentRenderPassDescriptor;
+
+    if (!renderPassDescriptor) return;
+
+    commandBuffer = [_commandQueue commandBuffer];
+
+    id <MTLRenderCommandEncoder> renderEncoder =
+    [commandBuffer renderCommandEncoderWithDescriptor: renderPassDescriptor];
+    renderEncoder.label = @"Render Command Encoder";
+
+    [renderEncoder setFrontFacingWinding: MTLWindingCounterClockwise];
+    [renderEncoder setCullMode: MTLCullModeBack];
+    [renderEncoder setRenderPipelineState: _pipelineState];
+    [renderEncoder setDepthStencilState: _depthState];
+
+    [renderEncoder pushDebugGroup: @"Draw Instance"];
+
+    [renderEncoder setVertexBuffer:_sharedUniformBuffer
+                            offset:0
+                           atIndex:BufferIndexSharedUniforms];
+
+    [renderEncoder setVertexBuffer:_instanceUniformBuffer
+                            offset:0
+                           atIndex:BufferIndexInstanceUniforms];
+
+    for (NSUInteger bufferIndex = 0; bufferIndex < _mesh.vertexBuffers.count; bufferIndex++)
+    {
+        MTKMeshBuffer *vertexBuffer = _mesh.vertexBuffers[bufferIndex];
+        if((NSNull*)vertexBuffer != [NSNull null])
+        {
+            [renderEncoder setVertexBuffer:vertexBuffer.buffer
+                                    offset:vertexBuffer.offset
+                                   atIndex:bufferIndex];
+        }
+    }
+
+    [renderEncoder setFragmentTexture: _colorMap
+                              atIndex: TextureIndexColor];
+
+    for(MTKSubmesh *submesh in _mesh.submeshes)
+    {
+        [renderEncoder drawIndexedPrimitives:submesh.primitiveType
+                                  indexCount:submesh.indexCount
+                                   indexType:submesh.indexType
+                                 indexBuffer:submesh.indexBuffer.buffer
+                           indexBufferOffset:submesh.indexBuffer.offset
+                               instanceCount:INSTANCE_COUNT];
+    }
+
+    [renderEncoder popDebugGroup];
+
+    [renderEncoder endEncoding];
+
+    __block dispatch_semaphore_t block_sema = _inFlightSemaphore;
+    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+        dispatch_semaphore_signal(block_sema);
+    }];
+
+    [commandBuffer presentDrawable:view.currentDrawable];
     [commandBuffer commit];
 }
 
 - (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
 {
-    /// Respond to drawable size or orientation changes here
-
-    float aspect = size.width / (float)size.height;
-    _projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), aspect, 0.1f, 100.0f);
+    _aspect = size.width / (float)size.height;
+    [self _updateCamera];
 }
 
-#pragma mark Matrix Math Utilities
+-(void)truckCamera:(float)delta
+{
+    _camera_position -= transform([self _cameraRotation], (vector_float3) { delta, 0.f, 0.f });
+}
+
+-(void)dollyCamera:(float)delta
+{
+    _camera_position -= transform([self _cameraRotation], (vector_float3) { 0.f, 0.f, delta });
+}
+
+-(void)yawCamera:(float)delta
+{
+    _camera_yaw += delta;
+}
+
+-(void)pitchCamera:(float)delta
+{
+    _camera_pitch += delta;
+}
+
+-(matrix_float4x4)_cameraRotation
+{
+    matrix_float4x4 pitch_rotation_matrix = matrix4x4_rotation(_camera_pitch, (vector_float3) { 1.f, 0.f, 0.f });
+    matrix_float4x4 yaw_rotation_matrix = matrix4x4_rotation(_camera_yaw, (vector_float3) { 0.f, 1.f, 0.f });
+    return matrix_multiply(pitch_rotation_matrix, yaw_rotation_matrix);
+}
+
+- (void)_updateCamera
+{
+    matrix_float4x4 rotation_matrix = [self _cameraRotation];
+    matrix_float4x4 translation_matrix = matrix4x4_translation(-_camera_position.x, -_camera_position.y, -_camera_position.z);
+    matrix_float4x4 view_matrix = matrix_multiply(rotation_matrix, translation_matrix);
+
+    matrix_float4x4 projection_matrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), _aspect, 0.1f, 1000.0f);
+
+    _viewProjectionMatrix = matrix_multiply(projection_matrix, view_matrix);
+}
+
+// MARK: - Matrix utilities
+
+vector_float3 transform(matrix_float4x4 matrix, vector_float3 vector) {
+    vector_float3 col1 = *(vector_float3 *)&matrix.columns[0];
+    vector_float3 col2 = *(vector_float3 *)&matrix.columns[1];
+    vector_float3 col3 = *(vector_float3 *)&matrix.columns[2];
+
+    float x = simd_dot(col1, vector);
+    float y = simd_dot(col2, vector);
+    float z = simd_dot(col3, vector);
+
+    return (vector_float3) { x, y, z };
+}
 
 matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz)
 {
