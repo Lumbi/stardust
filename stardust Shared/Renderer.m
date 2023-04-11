@@ -29,7 +29,7 @@ struct Physics {
     id <MTLComputePipelineState> _physicsPipelineState;
     id <MTLRenderPipelineState> _pipelineState;
     id <MTLDepthStencilState> _depthState;
-    id <MTLTexture> _colorMap;
+    id <MTLTexture> _particleTexture;
     MTLVertexDescriptor *_mtlVertexDescriptor;
 
     MTKMesh *_mesh;
@@ -170,13 +170,13 @@ struct Physics {
         MTKTextureLoaderOptionTextureStorageMode : @(MTLStorageModePrivate)
     };
 
-    _colorMap = [textureLoader newTextureWithName: @"ColorMap"
+    _particleTexture = [textureLoader newTextureWithName: @"ParticleTexture"
                                       scaleFactor: 1.0
                                            bundle: nil
                                           options: textureLoaderOptions
                                             error: &error];
 
-    if(!_colorMap || error)
+    if(!_particleTexture || error)
     {
         NSLog(@"Error creating texture %@", error.localizedDescription);
     }
@@ -285,8 +285,8 @@ struct Physics {
         }
     }
 
-    [renderEncoder setFragmentTexture: _colorMap
-                              atIndex: TextureIndexColor];
+    [renderEncoder setFragmentTexture:_particleTexture
+                              atIndex:TextureIndexColor];
 
     for(MTKSubmesh *submesh in _mesh.submeshes)
     {
