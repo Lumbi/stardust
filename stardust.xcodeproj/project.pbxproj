@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D0F445D29D7BFE800A0394C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D574A9229D7BE45005F1554 /* Foundation.framework */; };
+		0D0F445E29D7BFED00A0394C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D574A9429D7BE49005F1554 /* QuartzCore.framework */; };
+		0D0F445F29D7BFF100A0394C /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D574A9629D7BE4E005F1554 /* Metal.framework */; };
 		0D5749F629D7B8CC005F1554 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749F529D7B8CC005F1554 /* AppDelegate.m */; };
 		0D5749F929D7B8CC005F1554 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D5749F829D7B8CC005F1554 /* GameViewController.m */; };
 		0D5749FC29D7B8CC005F1554 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D5749FA29D7B8CC005F1554 /* Main.storyboard */; };
@@ -46,6 +49,9 @@
 		0D574A0F29D7B8CD005F1554 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0D574A1129D7B8CD005F1554 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0D574A1329D7B8CD005F1554 /* stardust_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = stardust_macOS.entitlements; sourceTree = "<group>"; };
+		0D574A9229D7BE45005F1554 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0D574A9429D7BE49005F1554 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0D574A9629D7BE4E005F1554 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +66,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D0F445F29D7BFF100A0394C /* Metal.framework in Frameworks */,
+				0D0F445E29D7BFED00A0394C /* QuartzCore.framework in Frameworks */,
+				0D0F445D29D7BFE800A0394C /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +82,7 @@
 				0D5749F329D7B8CC005F1554 /* stardust iOS */,
 				0D574A0729D7B8CC005F1554 /* stardust macOS */,
 				0D5749F229D7B8CC005F1554 /* Products */,
+				0D574A2229D7BCD3005F1554 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,6 +133,16 @@
 				0D574A1329D7B8CD005F1554 /* stardust_macOS.entitlements */,
 			);
 			path = "stardust macOS";
+			sourceTree = "<group>";
+		};
+		0D574A2229D7BCD3005F1554 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0D574A9629D7BE4E005F1554 /* Metal.framework */,
+				0D574A9429D7BE49005F1554 /* QuartzCore.framework */,
+				0D574A9229D7BE45005F1554 /* Foundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -325,6 +345,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/metal-cpp";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -375,6 +396,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/metal-cpp";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 			};
